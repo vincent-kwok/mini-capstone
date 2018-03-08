@@ -1,4 +1,4 @@
-class ProductsController < ApplicationController
+class V1::ProductsController < ApplicationController
   def all_products
     products = Product.all
     render json: products.as_json
