@@ -6,34 +6,46 @@ puts "Welcome to Vince's Store! How can I help you?"
 puts "(1) View all products"
 puts "(2) View a specific product"
 puts "(3) Create a product"
+puts "(4) Update a product"
+puts "(5) Delete a product"
 
 input_option = gets.chomp
 if input_option == "1"
-  system "clear"
   puts JSON.pretty_generate(Unirest.get("http://localhost:3000/v1/products").body)
 elsif input_option == "2"
   print "Enter a recipe id: "
   product_id = gets.chomp
-  system "clear"
   puts JSON.pretty_generate(Unirest.get("http://localhost:3000/v1/products/#{product_id}").body)
 elsif input_option == "3"
-  print "Enter a product name: "
-  input_name = gets.chomp
-  print "Enter a product price: "
-  input_price = gets.chomp
-  print "Enter a product image: "
-  input_image_url = gets.chomp.to_i
-  print "Enter a product description: "
-  input_description = gets.chomp
-  params = {
-    "name" => "#{input_name}",
-    "price" => input_price,
-    "image_url" => "#{input_image_url}",
-    "description" => "#{input_description}"
-  }
-  system "clear"
+  params = {}
+  print "Product name: "
+  params["name"] = gets.chomp
+  print "Product price: "
+  params["price"] = gets.chomp
+  print "Product image URL: "
+  params["image_url"] = gets.chomp.to_i
+  print "Product description: "
+  params["description"] = gets.chomp
   puts JSON.pretty_generate(Unirest.post("http://localhost:3000/v1/products", parameters: params).body)
-end  
+elsif input_option == "4"
+  print "Enter a product id: "
+  product_id = gets.chomp
+  params = {}
+  print "Product name: "
+  params["name"] = gets.chomp
+  print "Product price: "
+  params["price"] = gets.chomp
+  print "Product image URL: "
+  params["image_url"] = gets.chomp.to_i
+  print "Product description: "
+  params["description"] = gets.chomp
+  params.delete_if { |_key, value| value.empty? }
+  puts JSON.pretty_generate(Unirest.patch("http://localhost:3000/v1/products/#{product_id}", parameters: params).body)
+elsif input_option == "5"
+  print "Enter a product id: "
+  product_id = gets.chomp
+  puts JSON.pretty_generate(Unirest.delete("http://localhost:3000/v1/products/#{product_id}").body)
+end
 # prints hash to terminal
 # response = Unirest.get("http://localhost:3000/all_products")
 # products = response.body
