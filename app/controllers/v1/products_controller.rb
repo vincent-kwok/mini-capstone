@@ -1,7 +1,7 @@
 class V1::ProductsController < ApplicationController
   def index
     # products = Product.all
-    render json: Product.all.as_json
+    render json: Product.all.sort.as_json
   end
 
   def create
@@ -23,10 +23,10 @@ class V1::ProductsController < ApplicationController
   def update
     product_id = params["id"]
     product = Product.find_by(id: product_id)
-    product.name = params["name"] || product.name
-    product.price = params["price"] || product.price
-    product.image_url = params["image_url"] || product.image_url
-    product.description = params["description"] || product.description
+    product.name = params["name"]
+    product.price = params["price"]
+    product.image_url = params["image_url"]
+    product.description = params["description"]
     product.save
     render json: product.as_json
   end

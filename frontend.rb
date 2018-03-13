@@ -13,7 +13,7 @@ input_option = gets.chomp
 if input_option == "1"
   puts JSON.pretty_generate(Unirest.get("http://localhost:3000/v1/products").body)
 elsif input_option == "2"
-  print "Enter a recipe id: "
+  print "Enter a product ID: "
   product_id = gets.chomp
   puts JSON.pretty_generate(Unirest.get("http://localhost:3000/v1/products/#{product_id}").body)
 elsif input_option == "3"
@@ -23,26 +23,28 @@ elsif input_option == "3"
   print "Product price: "
   params["price"] = gets.chomp
   print "Product image URL: "
-  params["image_url"] = gets.chomp.to_i
+  params["image_url"] = gets.chomp
   print "Product description: "
   params["description"] = gets.chomp
   puts JSON.pretty_generate(Unirest.post("http://localhost:3000/v1/products", parameters: params).body)
 elsif input_option == "4"
-  print "Enter a product id: "
+  print "Enter a product ID: "
   product_id = gets.chomp
+  response = Unirest.get("http://localhost:3000/v1/products/#{product_id}")
+  contact = response.body
   params = {}
   print "Product name: "
   params["name"] = gets.chomp
   print "Product price: "
   params["price"] = gets.chomp
   print "Product image URL: "
-  params["image_url"] = gets.chomp.to_i
+  params["image_url"] = gets.chomp
   print "Product description: "
   params["description"] = gets.chomp
   params.delete_if { |_key, value| value.empty? }
   puts JSON.pretty_generate(Unirest.patch("http://localhost:3000/v1/products/#{product_id}", parameters: params).body)
 elsif input_option == "5"
-  print "Enter a product id: "
+  print "Enter a product ID: "
   product_id = gets.chomp
   puts JSON.pretty_generate(Unirest.delete("http://localhost:3000/v1/products/#{product_id}").body)
 end
