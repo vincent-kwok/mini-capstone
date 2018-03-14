@@ -12,8 +12,11 @@ class V1::ProductsController < ApplicationController
       image_url: params["image_url"],
       description: params["description"]
     )
-    product.save
-    render json: product.as_json
+    if product.save
+      render json: product.as_json
+    else
+      render json: { message: product.errors.full_messages }, status: 422
+    end
   end
 
   def show
@@ -30,13 +33,17 @@ class V1::ProductsController < ApplicationController
     product.image_url = params["image_url"]
     product.description = params["description"]
     product.save
-    render json: product.as_json
+    if product.save
+      render json: product.as_json
+    else
+      render json: { message: product.errors.full_messages}, status: 422
+    end
   end
 
   def destroy
     product_id = params["id"]
     product = Product.find_by(id: product_id)
     product.destroy
-    render json: {message: "Product has been removed."}
+    render json: { message: "Product has been removed." }
   end
 end

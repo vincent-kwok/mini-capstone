@@ -11,11 +11,15 @@ puts "(5) Delete a product"
 
 input_option = gets.chomp
 if input_option == "1"
-  puts JSON.pretty_generate(Unirest.get("http://localhost:3000/v1/products").body)
+  response = Unirest.get("http://localhost:3000/v1/products")
+  products = response.body
+  puts JSON.pretty_generate(products)
 elsif input_option == "2"
   print "Enter a product ID: "
   product_id = gets.chomp
-  puts JSON.pretty_generate(Unirest.get("http://localhost:3000/v1/products/#{product_id}").body)
+  response = Unirest.get("http://localhost:3000/v1/products/#{product_id}")
+  product = response.body
+  puts JSON.pretty_generate(product)
 elsif input_option == "3"
   params = {}
   print "Product name: "
@@ -28,12 +32,14 @@ elsif input_option == "3"
   params["image_url"] = gets.chomp
   print "Product description: "
   params["description"] = gets.chomp
-  puts JSON.pretty_generate(Unirest.post("http://localhost:3000/v1/products", parameters: params).body)
+  response = Unirest.post("http://localhost:3000/v1/products", parameters: params)
+  product = response.body
+  puts JSON.pretty_generate(product)
 elsif input_option == "4"
   print "Enter a product ID: "
   product_id = gets.chomp
   response = Unirest.get("http://localhost:3000/v1/products/#{product_id}")
-  contact = response.body
+  product = response.body
   params = {}
   print "Product name: "
   params["name"] = gets.chomp
@@ -46,9 +52,13 @@ elsif input_option == "4"
   print "Product description: "
   params["description"] = gets.chomp
   params.delete_if { |_key, value| value.empty? }
-  puts JSON.pretty_generate(Unirest.patch("http://localhost:3000/v1/products/#{product_id}", parameters: params).body)
+  response = Unirest.patch("http://localhost:3000/v1/products/#{product_id}", parameters: params)
+  product = response.body
+  puts JSON.pretty_generate(product)
 elsif input_option == "5"
   print "Enter a product ID: "
   product_id = gets.chomp
-  puts JSON.pretty_generate(Unirest.delete("http://localhost:3000/v1/products/#{product_id}").body)
+  response = Unirest.delete("http://localhost:3000/v1/products/#{product_id}")
+  product = response.body
+  puts JSON.pretty_generate(product)
 end
