@@ -8,6 +8,7 @@ class V1::ProductsController < ApplicationController
     product = Product.new(
       name: params["name"],
       price: params["price"],
+      in_stock: params["in_stock"],
       image_url: params["image_url"],
       description: params["description"]
     )
@@ -25,6 +26,7 @@ class V1::ProductsController < ApplicationController
     product = Product.find_by(id: product_id)
     product.name = params["name"]
     product.price = params["price"]
+    product.in_stock = params["in_stock"]
     product.image_url = params["image_url"]
     product.description = params["description"]
     product.save
@@ -37,21 +39,4 @@ class V1::ProductsController < ApplicationController
     product.destroy
     render json: {message: "Product has been removed."}
   end
-  # replaced by show method
-  # def oven
-  #   product = Product.find_by(name: "oven")
-  #   render json: product.as_json
-  # end
-  # def microwave
-  #   product = Product.find_by(name: "microwave")
-  #   render json: product.as_json
-  # end
-  # def refridgerator
-  #   product = Product.find_by(name: "refridgerator")
-  #   render json: product.as_json
-  # end
-  # def toaster
-  #   product = Product.find_by(name: "toaster")
-  #   render json: product.as_json
-  # end
 end
