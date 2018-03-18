@@ -1,5 +1,4 @@
 require "unirest"
-
 system "clear"
 
 puts "Welcome to Vince's Store! How can I help you?"
@@ -15,11 +14,11 @@ if input_option == "1"
   response = Unirest.get("http://localhost:3000/v1/products")
   products = response.body
   puts JSON.pretty_generate(products)
-  puts "To sort by price, type 1"
-  sort_by_price = gets.chomp
-  if sort_by_price == "1"
-    
-    
+  # puts "To sort by price, type 1"
+  # sort_by_price = gets.chomp
+  # if sort_by_price == "1"
+  #   products = products.order(price: :asc)
+  # end    
 elsif input_option == "2"
   print "Enter a search: "
   search_terms = gets.chomp

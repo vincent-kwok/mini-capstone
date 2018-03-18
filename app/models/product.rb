@@ -1,18 +1,26 @@
 class Product < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :price, presence: true, numericality: { greater_than: 0 }
-  validates :description, length: { in: 10..500 }
+  validates :description, length: { in: 6..100 }
+
+  def images
+    Image.where(product_id: id)
+  end
+
+  def supplier
+    Supplier.find_by(id: supplier_id)
+  end
 
   def is_discounted
-    price.to_i <= 20
+    price <= 20
   end
 
   def tax
-    (price.to_i * 0.09).round(2)
+    (price * 0.09).round(2)
   end
 
   def total
-    price.to_i + tax
+    price + tax
   end
 
   def as_json
@@ -25,7 +33,9 @@ class Product < ApplicationRecord
       description: description,
       tax: tax,
       total: total,
-      is_discounted: is_discounted
+      is_discounted: is_discounted,
+      supplier: supplier.as_json
+      images: images.map { |image| image.url }
     }
   end
 end
