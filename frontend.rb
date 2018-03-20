@@ -8,6 +8,7 @@ puts "(3) View a specific product by ID"
 puts "(4) Create a product"
 puts "(5) Update a product"
 puts "(6) Delete a product"
+puts "(0) Create a user"
 
 input_option = gets.chomp
 if input_option == "1"
@@ -39,8 +40,6 @@ elsif input_option == "4"
   params["price"] = gets.chomp
   print "Product In-Stock (true or false): "
   params["in_stock"] = gets.chomp
-  print "Product image URL: "
-  params["image_url"] = gets.chomp
   print "Product description: "
   params["description"] = gets.chomp
   response = Unirest.post("http://localhost:3000/v1/products", parameters: params)
@@ -58,8 +57,6 @@ elsif input_option == "5"
   params["price"] = gets.chomp
   print "Product In-Stock (true or false) (#{product["in_stock"]}): "
   params["in_stock"] = gets.chomp
-  print "Product image URL (#{product["image_url"]}): "
-  params["image_url"] = gets.chomp
   print "Product description (#{product["description"]}): "
   params["description"] = gets.chomp
   params.delete_if { |_key, value| value.empty? }
@@ -72,4 +69,17 @@ elsif input_option == "6"
   response = Unirest.delete("http://localhost:3000/v1/products/#{product_id}")
   product = response.body
   puts JSON.pretty_generate(product)
+elsif input_option == "0"
+  params = {}
+  print "Enter user's name: "
+  params[:name] = gets.chomp
+  print "Enter user's email: "
+  params[:email] = gets.chomp
+  print "Enter password: "
+  params[:password] = gets.chomp
+  print "Enter password again: "
+  params[:password_confirmation] = gets.chomp
+  response = Unirest.post("http://localhost:3000/v1/users", parameters: params)
+  user = response.body
+  puts JSON.pretty_generate(user)
 end
