@@ -1,5 +1,24 @@
 require "unirest"
-system "clear"
+require "io/console"
+
+# system "clear"
+print "Enter email: "
+input_email = gets.chomp
+print "Enter password: "
+input_password = gets.chomp
+
+response = Unirest.post(
+  "http://localhost:3000/user_token",
+  parameters: {
+    auth: {
+      email: "#{input_email}",
+      password: "#{input_password}"
+    }
+  }
+)
+jwt = response.body["jwt"]
+
+Unirest.default_header("Authorization", "Bearer #{jwt}")
 
 puts "Welcome to Vince's Store! How can I help you?"
 puts "(1) View all products"
@@ -76,9 +95,9 @@ elsif input_option == "0"
   print "Enter user's email: "
   params[:email] = gets.chomp
   print "Enter password: "
-  params[:password] = gets.chomp
+  params[:password] = STDIN.noecho(&:gets).chomp
   print "Enter password again: "
-  params[:password_confirmation] = gets.chomp
+  params[:password_confirmation] = STDIN.noecho(&:gets).chomp
   response = Unirest.post("http://localhost:3000/v1/users", parameters: params)
   user = response.body
   puts JSON.pretty_generate(user)
