@@ -1,4 +1,6 @@
 class V1::ProductsController < ApplicationController
+  before_action :authenticate_admin, except: [:index, :show]
+  
   def index
     products = Product.all
 
@@ -6,14 +8,12 @@ class V1::ProductsController < ApplicationController
     if search_terms
       products = products.where("name ILIKE ?", "%#{search_terms}%")
     end
-
     sort_by_price = params[:sort_by_price]
     if sort_by_price
       products = products.order(price: :asc)
     else
       products = products.order(id: :asc)
     end
-
     render json: products.as_json
   end
 
@@ -22,7 +22,8 @@ class V1::ProductsController < ApplicationController
       name: params[:name],
       price: params[:price],
       in_stock: params[:in_stock],
-      description: params[:description]
+      description: params[:description],
+      supplier_id: 1
     )
     if product.save
       render json: product.as_json
@@ -32,7 +33,6 @@ class V1::ProductsController < ApplicationController
   end
 
   def show
-    # text = Product.find_by(id: params["id"])
     product = Product.find_by(id: params[:id])
     render json: product.as_json
   end

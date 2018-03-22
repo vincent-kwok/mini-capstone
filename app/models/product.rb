@@ -4,6 +4,7 @@ class Product < ApplicationRecord
   validates :description, length: { in: 6..100 }
 
   belongs_to :supplier
+  has_many :orders
   # def supplier
   #   Supplier.find_by(id: supplier_id)
   # end
@@ -35,8 +36,8 @@ class Product < ApplicationRecord
       tax: tax,
       total: total,
       is_discounted: is_discounted,
-      supplier: supplier.as_json
-      # images: images.map { |image| image.url }
+      supplier: supplier.as_json,
+      images: images.map { |image| image.url }
     }
   end
 end
