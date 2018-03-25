@@ -4,16 +4,24 @@ class V1::ProductsController < ApplicationController
   def index
     products = Product.all
 
-    search_terms = params[:q]
-    if search_terms
-      products = products.where("name ILIKE ?", "%#{search_terms}%")
+    search_term = params[:search_term]
+    if search_term
+      products = products.where("name ILIKE ?", "%#{search_term}%")
     end
+
     sort_by_price = params[:sort_by_price]
     if sort_by_price
       products = products.order(price: :asc)
     else
       products = products.order(id: :asc)
     end
+
+    search_category = params[:search_category]
+    if search_category
+      category = Category.find_by(name: "#{search_category}")
+      products = category.products
+    end
+
     render json: products.as_json
   end
 
@@ -28,7 +36,7 @@ class V1::ProductsController < ApplicationController
     if product.save
       render json: product.as_json
     else
-      render json: { errors: product.errors.full_messages }, status: :unprocessable_entity
+      render json: {errors: product.errors.full_messages}, status: :unprocessable_entity
     end
   end
 
@@ -46,13 +54,13 @@ class V1::ProductsController < ApplicationController
     if product.save
       render json: product.as_json
     else
-      render json: { errors: product.errors.full_messages}, status: :unprocessable_entity
+      render json: {errors: product.errors.full_messages}, status: :unprocessable_entity
     end
   end
 
   def destroy
     product = Product.find_by(id: params[:id])
     product.destroy
-    render json: { message: "Product has been removed." }
+    render json: {message: "Product has been removed."}
   end
 end
