@@ -22,17 +22,27 @@ if input_option == "1"
     response = Unirest.post("http://localhost:3000/v1/users", parameters: params)
   p response.body
 elsif input_option == "2"
-  # Log In
-  print "Enter email: "
-  input_username = gets.chomp
-  print "Enter password: "
-  input_password = STDIN.noecho(&:gets).chomp
+  # Log In manually
+  # print "Enter email: "
+  # input_username = gets.chomp
+  # print "Enter password: "
+  # input_password = STDIN.noecho(&:gets).chomp
+  # response = Unirest.post(
+  #   "http://localhost:3000/user_token",
+  #   parameters: {
+  #     auth: {
+  #       email: "#{input_username}",
+  #       password: "#{input_password}"
+  #     }
+  #   }
+  # )
+  # auto sign in
   response = Unirest.post(
     "http://localhost:3000/user_token",
     parameters: {
       auth: {
-        email: "#{input_username}",
-        password: "#{input_password}"
+        email: "vince@email.com",
+        password: "password"
       }
     }
   )
@@ -55,8 +65,10 @@ puts "(2) Create a product"
 puts "(3) View a specific product by ID"
 puts "(4) Update a product"
 puts "(5) Delete a product"
-puts "(6) Start order"
+puts "(6) Order things in cart"
 puts "(7) View orders"
+puts "(8) Add product to cart"
+puts "(9) View shopping cart"
 input_option = gets.chomp
 
 
@@ -132,18 +144,35 @@ elsif input_option == "5"
   product = response.body
   puts JSON.pretty_generate(product)
 elsif input_option == "6"
-  # Start order
-  params = {}
-  print "Enter a product ID: "
-  params[:product_id] = gets.chomp
-  print "Enter a quantity: "
-  params[:quantity] = gets.chomp
-  response = Unirest.post("http://localhost:3000/v1/orders", parameters: params)
+  response = Unirest.post("http://localhost:3000/v1/orders")
   order = response.body
   puts JSON.pretty_generate(order)
+#   # Start order
+#   params = {}
+#   print "Enter a product ID: "
+#   params[:product_id] = gets.chomp
+#   print "Enter a quantity: "
+#   params[:quantity] = gets.chomp
+#   response = Unirest.post("http://localhost:3000/v1/orders", parameters: params)
+#   order = response.body
+#   puts JSON.pretty_generate(order)
 elsif input_option == "7"
   # View orders
   response = Unirest.post("http://localhost:3000/v1/orders")
   orders = response.body
   puts JSON.pretty_generate(orders)
+elsif input_option == "8"
+  # Add product to cart
+  params = {}
+  print "Enter a product ID: "
+  params[:product_id] = gets.chomp
+  print "Enter a quantity: "
+  params[:quantity] = gets.chomp
+  response = Unirest.post("http://localhost:3000/v1/carted_products", parameters: params)
+  carted_product = response.body
+  puts JSON.pretty_generate(carted_product)
+elsif input_option == "9"
+  response = Unirest.post("http://localhost:3000/v1/carted_products")
+  carted_products = response.body
+  puts JSON.pretty_generate(carted_products)
 end

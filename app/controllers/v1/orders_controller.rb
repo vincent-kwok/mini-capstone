@@ -7,8 +7,12 @@ class V1::OrdersController < ApplicationController
   end
 
   def create
-    product = Product.find_by(id: params[:product_id])
-    calculated_subtotal = product.price * params[:quantity].to_i
+    carted_products = current_user.carted_products.where(status: "carted")
+
+    calculated_subtotal = 0
+    carted_products.each { |carted_product|
+      calculated_subtotal += carted_product.product.price * carted_product.quantity
+    }
     calculated_tax = calculated_subtotal * 0.09
     calculated_total = calculated_tax + calculated_subtotal
 
@@ -21,6 +25,14 @@ class V1::OrdersController < ApplicationController
     total: calculated_total
     )
     order.save
+    
+    carted_products.each { |carted_product|
+      carted_product.status = "purchased"
+      carted_product.order_id = order.id
+      carted_product.save
+    }
     render json: order.as_json
+
+    # product = Product.find_by(id: params[:product_id])
   end
 end
